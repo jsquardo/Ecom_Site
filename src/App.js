@@ -16,18 +16,17 @@ class App extends Component {
 	componentDidMount() {
 		const { setCurrentUser } = this.props;
 
-		this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
 			if (userAuth) {
 				const userRef = await createUserProfileDocument(userAuth);
 
-				userRef.onSnapshot(snapShot => {
+				userRef.onSnapshot((snapShot) => {
 					setCurrentUser({
 						id: snapShot.id,
 						...snapShot.data()
 					});
 				});
-			}
-			else {
+			} else {
 				setCurrentUser(userAuth);
 			}
 		});
@@ -47,8 +46,7 @@ class App extends Component {
 					<Route
 						exact
 						path="/signin"
-						render={() =>
-							this.props.currentUser ? <Redirect to="/" /> : <SignInSignUp />}
+						render={() => (this.props.currentUser ? <Redirect to="/" /> : <SignInSignUp />)}
 					/>
 				</Switch>
 			</div>
@@ -60,8 +58,8 @@ const mapStateToProps = ({ user }) => ({
 	currentUser: user.currentUser
 });
 
-const mapDispatchToProps = dispatch => ({
-	setCurrentUser: user => dispatch(setCurrentUser(user))
+const mapDispatchToProps = (dispatch) => ({
+	setCurrentUser: (user) => dispatch(setCurrentUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
