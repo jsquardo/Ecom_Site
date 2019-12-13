@@ -1,4 +1,5 @@
-# Outdoorsy eCommerce
+# Outdoorsy eCommerce 
+![](https://i.ibb.co/qYqXb6S/Group.png) 
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/jsquardo/Ecom_Site?style=flat-square) [![GitHub issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://GitHub.com/jsquardo/Ecom_Site/issues/)
 
@@ -11,6 +12,7 @@ EcomWeb is a fully functional E-commerce website I have created for a fictional 
 
 
 ## Still to do:
+ *  Finish Page routing
  *  Integrate the Stripe payment API
  *  Change to using styled components
  *  Make more mobile friendly
