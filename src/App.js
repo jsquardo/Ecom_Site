@@ -1,14 +1,19 @@
-import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
-import './App.css';
-import HomePage from './pages/homepage/HomePage';
-import ShopPage from './pages/shop/ShopPage';
-import Header from './components/Header/Header';
-import SignInSignUp from './pages/SignInSignUp/SignInSignUp';
-import { auth, createUserProfileDocument } from './Firebase/firebase.utils';
-import { setCurrentUser } from './Redux/User/userActions';
+import "./App.css";
+import HomePage from "./pages/homepage/HomePage";
+import ShopPage from "./pages/shop/ShopPage";
+import Header from "./components/Header/Header";
+import SignInSignUp from "./pages/SignInSignUp/SignInSignUp";
+import CheckoutPage from "./pages/checkout/CheckoutPage";
+
+import { auth, createUserProfileDocument } from "./Firebase/firebase.utils";
+
+import { setCurrentUser } from "./Redux/User/userActions";
+import { selectCurrentUser } from "./Redux/User/userSelector";
 
 class App extends Component {
 	unsubscribeFromAuth = null;
@@ -16,11 +21,11 @@ class App extends Component {
 	componentDidMount() {
 		const { setCurrentUser } = this.props;
 
-		this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
 			if (userAuth) {
 				const userRef = await createUserProfileDocument(userAuth);
 
-				userRef.onSnapshot((snapShot) => {
+				userRef.onSnapshot(snapShot => {
 					setCurrentUser({
 						id: snapShot.id,
 						...snapShot.data()
@@ -43,10 +48,12 @@ class App extends Component {
 				<Switch>
 					<Route exact path="/" component={HomePage} />
 					<Route path="/shop" component={ShopPage} />
+					<Route exact path="/checkout" component={CheckoutPage} />
 					<Route
 						exact
 						path="/signin"
-						render={() => (this.props.currentUser ? <Redirect to="/" /> : <SignInSignUp />)}
+						render={() =>
+							this.props.currentUser ? <Redirect to="/" /> : <SignInSignUp />}
 					/>
 				</Switch>
 			</div>
@@ -54,12 +61,12 @@ class App extends Component {
 	}
 }
 
-const mapStateToProps = ({ user }) => ({
-	currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+	currentUser: selectCurrentUser
 });
 
-const mapDispatchToProps = (dispatch) => ({
-	setCurrentUser: (user) => dispatch(setCurrentUser(user))
+const mapDispatchToProps = dispatch => ({
+	setCurrentUser: user => dispatch(setCurrentUser(user))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
